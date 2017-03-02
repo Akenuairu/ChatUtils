@@ -1,9 +1,11 @@
-package com.gmail.akenuairu.chatutils;
+package com.gmail.akenuairu.chatutils.config;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import com.gmail.akenuairu.chatutils.ChatUtils;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -103,5 +105,20 @@ public class BaseConfig
 	public CommentedConfigurationNode get()
 	{
 		return configNode;
+	}
+	
+	public void put(Object value, Object... args)
+	{
+		get().getNode(args).setValue(value);
+	}
+	
+	public void put(String coment, Object value, Object... args)
+	{
+		get().getNode(args).setValue(value).setComment(coment);
+	}
+	
+	public CommentedConfigurationNode get(Object args)
+	{
+		return get().getNode(args);
 	}
 }

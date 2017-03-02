@@ -6,6 +6,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 
 import com.gmail.akenuairu.chatutils.ChatUtils;
@@ -13,14 +14,14 @@ import com.gmail.akenuairu.chatutils.ChatUtils;
 public class EventsManager
 {
 	ChatUtils plugin;
-	
+
 	public EventsManager(ChatUtils origin)
 	{
 		plugin = origin;
 		origin.registerEvent(this);
 	}
 
-	@Listener(order=Order.PRE)
+	@Listener(order = Order.PRE)
 	public void onChat(MessageChannelEvent.Chat event)
 	{
 		if (event.getCause().first(Player.class).isPresent())
@@ -37,4 +38,17 @@ public class EventsManager
 		}
 
 	}
+
+	@Listener
+	public void onJoin(ClientConnectionEvent.Join event)
+	{
+		Player p = event.getTargetEntity();
+	}
+
+	@Listener
+	public void onDisconned(ClientConnectionEvent.Disconnect event)
+	{
+		Player p = event.getTargetEntity();
+	}
+
 }
