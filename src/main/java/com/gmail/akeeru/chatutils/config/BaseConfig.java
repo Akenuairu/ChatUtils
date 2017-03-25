@@ -1,11 +1,11 @@
-package com.gmail.akenuairu.chatutils.config;
+package com.gmail.akeeru.chatutils.config;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.gmail.akenuairu.chatutils.ChatUtils;
+import com.gmail.akeeru.chatutils.ChatUtils;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -25,38 +25,38 @@ public class BaseConfig
 
 	public BaseConfig(String name, String suffix)
 	{
-		configFile = Paths.get(configDir + "/" + name + suffix);
-		configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+		this.configFile = Paths.get(this.configDir + "/" + name + suffix, new String[0]);
+		this.configLoader = HoconConfigurationLoader.builder().setPath(this.configFile).build();
 	}
 
 	public BaseConfig(String name, String suffix, String folder)
 	{
-		configDir = Paths.get(configDir + "/" + folder);
-		configFile = Paths.get(configDir + "/" + name + suffix);
-		configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+		this.configDir = Paths.get(this.configDir + "/" + folder, new String[0]);
+		this.configFile = Paths.get(this.configDir + "/" + name + suffix, new String[0]);
+		this.configLoader = HoconConfigurationLoader.builder().setPath(this.configFile).build();
 	}
 
 	public void setup()
 	{
-		if (!Files.exists(configDir))
+		if (!Files.exists(this.configDir))
 		{
 			try
 			{
-				Files.createDirectories(configDir);
+				Files.createDirectories(this.configDir);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-
-		if (!Files.exists(configFile))
+		if (!Files.exists(this.configFile))
 		{
 			try
 			{
-				Files.createFile(configFile);
+				Files.createFile(this.configFile);
 				load();
 				populate();
+				init();
 				save();
 			}
 			catch (Exception e)
@@ -67,6 +67,7 @@ public class BaseConfig
 		else
 		{
 			load();
+			init();
 		}
 	}
 
@@ -74,14 +75,12 @@ public class BaseConfig
 	{
 		try
 		{
-			configNode = configLoader.load();
+			this.configNode = this.configLoader.load();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
-		init();
 	}
 
 	public void init()
@@ -91,7 +90,7 @@ public class BaseConfig
 	{
 		try
 		{
-			configLoader.save(configNode);
+			this.configLoader.save(this.configNode);
 		}
 		catch (IOException e)
 		{
@@ -104,19 +103,19 @@ public class BaseConfig
 
 	public CommentedConfigurationNode get()
 	{
-		return configNode;
+		return this.configNode;
 	}
-	
+
 	public void put(Object value, Object... args)
 	{
 		get().getNode(args).setValue(value);
 	}
-	
+
 	public void put(String coment, Object value, Object... args)
 	{
 		get().getNode(args).setValue(value).setComment(coment);
 	}
-	
+
 	public CommentedConfigurationNode get(Object args)
 	{
 		return get().getNode(args);
